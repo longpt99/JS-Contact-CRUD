@@ -50,6 +50,7 @@ function main(){
 		let userName = readlineSync.question('Name Contact: ');
 		let userNum = readlineSync.question('Number Contact: ');
 
+		//Viết hoa chữ cái đầu tiên
 		// function capitalizedName(){
 		// 	let capName = userName.split(" ");
 		// 	let result = [];
@@ -62,7 +63,7 @@ function main(){
 		var user = {
 			id: phoneList.length,
 			name: userName,
-			number: parseInt(userNum)
+			number:  Number(userNum)
 		}
 		console.log(user);
 
@@ -82,7 +83,6 @@ function main(){
 							fs.writeFileSync('./db.json', phoneList, {encoding: 'utf-8'}); break;
 			}
 		}saveContact();
-
 	}
 
 	function editContact(){
@@ -101,7 +101,7 @@ function main(){
 		let newName = readlineSync.question("Name: ");
 		let newNum = readlineSync.question("Number: ");
 		getData[0].name = newName;
-		getData[0].number = parseInt(newNum);
+		getData[0].number = Number(newNum);
 		console.log("New contact: ", getData);
 		phoneList.splice(getId, 0 , getData[0]); // Add values to the specified (xác định) position
 		phoneList = JSON.stringify(phoneList);
@@ -126,49 +126,36 @@ function main(){
 	}
 
 	function searchContact(){
-		let qs = readlineSync.question("Type to seach contact(Name/Number): ");
-		search(phoneList, qs);
-	};
-
-	function search(data, search){
+		let search = readlineSync.question("Type to seach contact(Name/Number): ");
 		if(!isNaN(search)){
 			search = Number(search);
-			console.log(search);
-			let arr = new Array();
-			for(let user of data){
-				if((user.number).toString().indexOf(search.toString())===0){
-					arr.push(user);
-				}
-			}
-			console.log(arr);
+			let result = phoneList.filter(function(value){
+				return (value.number).toString().indexOf(search.toString()) === 0;
+			})
+			console.log(result);
 		}else{
 			search = search.toString();
-			let arr = new Array();
-			for(user of data){
-				if(change_alias(user.name).toLowerCase().indexOf(change_alias(search).toLowerCase())===0){
-				 arr.push(user);
-				}
-			}
-			console.log(arr);
+			let result = phoneList.filter(function(value){
+				return change_alias(value.name).toLowerCase().indexOf(change_alias(search).toLowerCase()) === 0;
+			})
+			console.log(result);
 		}
-	}
+	};
 
 	function change_alias(alias) {
-    var str = alias;
-    str = str.toLowerCase();
-    str = str.replace(/à|á|ạ|ả|ã|â|ầ|ấ|ậ|ẩ|ẫ|ă|ằ|ắ|ặ|ẳ|ẵ/g,"a"); 
-    str = str.replace(/è|é|ẹ|ẻ|ẽ|ê|ề|ế|ệ|ể|ễ/g,"e"); 
-    str = str.replace(/ì|í|ị|ỉ|ĩ/g,"i"); 
-    str = str.replace(/ò|ó|ọ|ỏ|õ|ô|ồ|ố|ộ|ổ|ỗ|ơ|ờ|ớ|ợ|ở|ỡ/g,"o"); 
-    str = str.replace(/ù|ú|ụ|ủ|ũ|ư|ừ|ứ|ự|ử|ữ/g,"d"); 
-    str = str.replace(/ỳ|ý|ỵ|ỷ|ỹ/g,"y"); 
-    str = str.replace(/đ/g,"d");
-    str = str.replace(/!|@|%|\^|\*|\(|\)|\+|\=|\<|\>|\?|\/|,|\.|\:|\;|\'|\"|\&|\#|\[|\]|~|\$|_|`|-|{|}|\||\\/g," ");
-    str = str.replace(/ + /g," ");
-    str = str.trim(); 
-    return str;
-    
-  }
-}
+	    var str = alias;
+	    str = str.toLowerCase();
+	    str = str.replace(/à|á|ạ|ả|ã|â|ầ|ấ|ậ|ẩ|ẫ|ă|ằ|ắ|ặ|ẳ|ẵ/g,"a"); 
+	    str = str.replace(/è|é|ẹ|ẻ|ẽ|ê|ề|ế|ệ|ể|ễ/g,"e"); 
+	    str = str.replace(/ì|í|ị|ỉ|ĩ/g,"i"); 
+	    str = str.replace(/ò|ó|ọ|ỏ|õ|ô|ồ|ố|ộ|ổ|ỗ|ơ|ờ|ớ|ợ|ở|ỡ/g,"o"); 
+	    str = str.replace(/ù|ú|ụ|ủ|ũ|ư|ừ|ứ|ự|ử|ữ/g,"d"); 
+	    str = str.replace(/ỳ|ý|ỵ|ỷ|ỹ/g,"y"); 
+	    str = str.replace(/đ/g,"d");
+	    str = str.replace(/!|@|%|\^|\*|\(|\)|\+|\=|\<|\>|\?|\/|,|\.|\:|\;|\'|\"|\&|\#|\[|\]|~|\$|_|`|-|{|}|\||\\/g," ");
+	    str = str.replace(/ + /g," ");
+	    str = str.trim(); 
+	    return str;
+  	}
 
-main();
+}main();
